@@ -74,6 +74,7 @@ export default Button;
 
 const styles = StyleSheet.create({
   button: {
+    elevation: 1,
     borderRadius: theme.sizes.radius,
     height: theme.sizes.base * 3,
     justifyContent: 'center',
@@ -82,7 +83,7 @@ const styles = StyleSheet.create({
   shadow: {
     shadowColor: theme.colors.black,
     shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.3,
     shadowRadius: 10,
   },
   accent: { backgroundColor: theme.colors.accent, },
