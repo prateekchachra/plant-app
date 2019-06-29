@@ -39,7 +39,7 @@ const {width, height}  = Dimensions.get('window');
 
                     <TouchableOpacity
                     key={`img-${index}`}
-                onPress={() => navigation.navigate('product')}
+                onPress={() => navigation.navigate('Product')}
                 >
                     <Image source={img} style={[styles.image, {minWidth: imgWidth, maxWidth: imgWidth}]} />
                 </TouchableOpacity>
@@ -58,7 +58,7 @@ const {width, height}  = Dimensions.get('window');
                 <TouchableOpacity
 
                 style={[styles.image, styles.mainImage]}
-                onPress={() => navigation.navigate('product')}
+                onPress={() => navigation.navigate('Product')}
                 >
                     <Image source={mainImage} style={[styles.image, styles.mainImage]} />
                 </TouchableOpacity>
