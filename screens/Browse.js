@@ -1,15 +1,29 @@
 import React, { Component } from 'react'
-import { StyleSheet, Image, TouchableOpacity } from 'react-native'
+import { StyleSheet, Image, TouchableOpacity, ScrollView } from 'react-native'
 import { Block, Text, Button, Card, Badge } from '../components';
 import { theme, mocks } from '../constants';
-import { ScrollView } from 'react-native-gesture-handler';
-
 
 class Browse extends Component {
 
     state = {
-        active: 'Products'
+        active: 'Products',
+        categories: [],
 
+    }
+
+    componentDidMount = () => {
+      this.setState({categories: this.props.categories});
+    };
+    
+
+    handleTab = tab => {
+        const {categories} = this.props;
+
+        const filtered = categories.filter(
+            category => category.tags.includes(tab.toLowerCase())
+        );
+
+        this.setState({active: tab, categories: filtered})
     }
 
     renderTab(tab){
@@ -19,13 +33,13 @@ class Browse extends Component {
         return (
             <TouchableOpacity
             key={`tab-${tab}`}
-            onPress={() => this.setState({active: tab})}
+            onPress={() => this.handleTab(tab)}
             style={[
                 styles.tab,
                 isActive ? styles.active : null
 
             ]}>
-                <Text title medium gray={!isActive} secondary={!isActive}>{tab}</Text>
+                <Text title medium gray={!isActive} secondary={isActive}>{tab}</Text>
             </TouchableOpacity>
 
         )
@@ -34,12 +48,13 @@ class Browse extends Component {
     render() {
 
         const tabs = ['Products', 'Inspirations', 'Shop'];
-        const {profile} = this.props;
+        const {profile, navigation} = this.props;
+        const { categories} = this.state;
         return (
             <Block>
                 <Block flex={false} row center space="between" style={styles.header}>
-                <Text h1 light> Browse </Text>
-                <Button>
+                <Text h1 bold> Browse </Text>
+                <Button onPress={()=> navigation.navigate('Settings')}>
                     <Image source={profile.avatar}
                     style={styles.avatar}/>
                 </Button>
@@ -50,19 +65,28 @@ class Browse extends Component {
 
                 <ScrollView showsVerticalScrollIndicator={false} 
                 style={{paddingVertical: 34}}>
+                    <Block row space="between" style={styles.categories}>
+                    {categories.map(category => {
+                        return(
+                           <TouchableOpacity 
+                        key={category.name}
+                           onPress={() => navigation.navigate('Explore', {category})}>
+                                      <Card center middle shadow style={styles.category}>
+                                          <Badge margin={[0, 0, 15]}
+                                          size={50} color="rgba(41,126, 143, 0.20)"
+                                          >
+                                              <Image source={category.image} />
+                                          </Badge>
+                                          <Text >
+                                              {category.name}
+                                          </Text>
+                                          <Text gray caption>{category.count} products</Text>
+                                      </Card>
+                                  </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => navigation.navigate('Explore', {category})}>
-                    <Card center middle shadow style={styles.category}>
-                        <Badge>
-                            <Image source={require('../assets/icon/plants.png')} />
-                        </Badge>
-                        <Text >
-                            Plants
-                        </Text>
-                        <Text gray caption>1 2 3 Products</Text>
-                    </Card>
-                </TouchableOpacity>
-
+                     ); })}
+  
+                    </Block>
                 </ScrollView>
             </Block>
 
@@ -98,12 +122,27 @@ active: {
     borderBottomWidth: 3,
 
 
+},
+category: {
+
+    //this should be dynamic based on screen width
+    width: 140,
+    height: 140,
+    
+
+},
+categories: {
+    flexWrap: 'wrap',
+    paddingHorizontal: 32,
+    marginBottom: 56,
+
 }
 
 })
 Browse.defaultProps = {
 
     profile : mocks.profile,
+    categories: mocks.categories,
 }
 
 export default Browse;
